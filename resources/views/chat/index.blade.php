@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('footer_script')
+
+@endsection
 @section('content')
     <div class="container">
         @foreach($messages as $message)
@@ -10,17 +13,38 @@
                 </div>
             </div>
         @endforeach
-        <form class="mt-3" action="{{route('chat.store')}}" method="post">
+        <form class="mt-3" id="message_form">
             @csrf
             <input type="text" class="form-control @if($errors->has('text')) is-invalid @endif" name="text"/>
-            @if ($errors->has('text'))
-                <ul class="list-unstyled invalid-feedback mb-1">
-                    @foreach ($errors->get('text') as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
+
+            <ul class="list-unstyled invalid-feedback mb-1 text_errors"></ul>
+
             <button type="submit" class="btn btn-primary mt-3">Отправить</button>
         </form>
+        <script>
+
+            let form = document.getElementById('message_form')
+            form.addEventListener('submit', function (event) {
+                jQuery("[name=text]").removeClass("is-invalid");
+                event.preventDefault();
+                axios({
+                    'url': '{{ route('chat.store')}}',
+                    'method': 'post',
+                    'data': new FormData(event.target)
+                }).then(response => {
+                    jQuery("[name=text]").val('');
+
+                }).catch(errors => {
+                    jQuery(".text_errors").empty()
+                    let validate_errors = errors.response.data.errors;
+                    jQuery("[name=text]").addClass("is-invalid");
+                    Object.keys(validate_errors).forEach(key => {
+                        jQuery("." + key + "_errors").append("<li>" + validate_errors[key][0] + "</li>")
+                    });
+                }).finally(function () {
+
+                })
+            })
+        </script>
     </div>
 @endsection

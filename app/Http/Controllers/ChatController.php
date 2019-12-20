@@ -10,7 +10,7 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $messages = Message::orderBy('id', 'desc')->with('user')->take(50)->get();
+        $messages = Message::orderBy('id', 'desc')->with('user')->take(10)->get();
         $messages = $messages->reverse();
         return view('chat.index', compact('messages'));
     }
