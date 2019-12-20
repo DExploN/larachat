@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\StoreMessage;
 use App\Message;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, ['text' => 'required|min:5']);
-        $request->user()->messages()->save(new Message(['text' => $request->input('text')]));
+        StoreMessage::dispatch($request->input('text'), $request->user());
         return redirect()->back();
     }
 }
