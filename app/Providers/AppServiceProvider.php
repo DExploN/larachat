@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        View::composer('layouts.app', function ($view) {
+            $invitesCount = 0;
+            if (Auth::user()) {
+                $invitesCount = Auth::user()->invites()->count();
+            }
+            $view->with('invitesCount', $invitesCount);
+        });
     }
 }

@@ -19,18 +19,21 @@ class SendMessageEvent implements ShouldBroadcast
      */
     public $user_id;
     public $text;
+    public $room_id;
 
     /**
      * Create a new event instance.
      *
      * @param User $user
      * @param $text
+     * @param $room_id
      */
-    public function __construct(User $user, $text)
+    public function __construct(User $user, $text, $room_id)
     {
         //
         $this->user_id = $user->id;
         $this->text = $text;
+        $this->room_id = $room_id;
     }
 
     /**
@@ -40,7 +43,7 @@ class SendMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('chat');
+        return new Channel('chat_' . $this->room_id);
     }
 
 }

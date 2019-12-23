@@ -27,6 +27,6 @@ class SendMessageListener implements ShouldQueue
      */
     public function handle(SendMessageEvent $event)
     {
-        Message::create(['text' => $event->text, 'user_id' => $event->user_id]);
+        Message::create(['text' => $event->text, 'user_id' => $event->user_id, 'room_id' => $event->room_id]);
     }
 }

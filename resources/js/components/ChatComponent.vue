@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <div class="card mb-3" v-for="(message) in messages">
             <div class="card-body">
                 <h5 class="card-title">{{message.user.name}}</h5>
@@ -16,7 +16,8 @@
 <script>
     export default {
         props: [
-            'routes'
+            'routes',
+            'room'
         ],
         data: function () {
             return {
@@ -26,7 +27,7 @@
         },
         mounted() {
             this.updateMessages();
-            Echo.channel('laravel_database_chat')
+            Echo.channel('laravel_database_chat_' + this.room)
                 .listen('SendMessageEvent', (e) => {
                     this.updateMessages();
                 });
