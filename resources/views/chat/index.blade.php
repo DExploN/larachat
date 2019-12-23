@@ -21,30 +21,35 @@
 
             <button type="submit" class="btn btn-primary mt-3">Отправить</button>
         </form>
-        <script>
+            <script>
 
-            let form = document.getElementById('message_form')
-            form.addEventListener('submit', function (event) {
-                jQuery("[name=text]").removeClass("is-invalid");
-                event.preventDefault();
-                axios({
-                    'url': '{{ route('chat.store')}}',
+                let form = document.getElementById('message_form');
+                form.addEventListener('submit', function (event) {
+                    jQuery("[name=text]").removeClass("is-invalid");
+                    event.preventDefault();
+                    axios({
+                        'url': '{{ route('chat.store')}}',
                     'method': 'post',
                     'data': new FormData(event.target)
                 }).then(response => {
                     jQuery("[name=text]").val('');
 
-                }).catch(errors => {
-                    jQuery(".text_errors").empty()
-                    let validate_errors = errors.response.data.errors;
-                    jQuery("[name=text]").addClass("is-invalid");
-                    Object.keys(validate_errors).forEach(key => {
-                        jQuery("." + key + "_errors").append("<li>" + validate_errors[key][0] + "</li>")
-                    });
-                }).finally(function () {
+                    }).catch(errors => {
+                        jQuery(".text_errors").empty()
+                        let validate_errors = errors.response.data.errors;
+                        jQuery("[name=text]").addClass("is-invalid");
+                        Object.keys(validate_errors).forEach(key => {
+                            jQuery("." + key + "_errors").append("<li>" + validate_errors[key][0] + "</li>")
+                        });
+                    }).finally(function () {
 
-                })
-            })
-        </script>
+                    })
+                });
+
+                Echo.channel('{{config('database.redis.options.prefix')}}' + 'chat')
+                    .listen('SendMessageEvent', (e) => {
+                        console.log(e);
+                    });
+            </script>
     </div>
 @endsection
