@@ -11,9 +11,14 @@ class ChatController extends Controller
 {
     public function index()
     {
+        return view('chat.index');
+    }
+
+    public function messages()
+    {
         $messages = Message::orderBy('id', 'desc')->with('user')->take(10)->get();
         $messages = $messages->reverse();
-        return view('chat.index', compact('messages'));
+        return response()->json(array_values($messages->toArray()));
     }
 
     public function store(Request $request)
