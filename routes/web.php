@@ -27,6 +27,7 @@ Route::prefix("/rooms")->name("rooms.")->middleware('auth')->group(function () {
     Route::get('/', 'RoomController@index')->name('index');
     Route::post('/', 'RoomController@store')->name('store');
     Route::get('/{room}', 'RoomController@show')->name('show');
+    Route::delete('/{room}', 'RoomController@logout')->name('logout');
 
     Route::post('/{room}', 'RoomController@storeMessage')->name('messages.store');
     Route::get('/{room}/message', 'RoomController@messages')->name('messages.index');

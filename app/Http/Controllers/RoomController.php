@@ -26,6 +26,12 @@ class RoomController extends Controller
         return redirect()->back();
     }
 
+    public function logout(Room $room, Request $request)
+    {
+        $request->user()->rooms()->detach($room);
+        return redirect()->route('rooms.index');
+    }
+
     public function show(Room $room)
     {
         if (Gate::denies('show_room', $room->id)) {

@@ -4,8 +4,14 @@
 @endsection
 @section('content')
     <div class="container">
-        <div class="col-12 mb-4">
-            <b class="mr-1">Members:</b> {{$room->members->pluck('name')->implode(', ')}}
+        <div class="mb-4 d-flex align-items-center">
+
+            <form class="form-inline mr-2" action="{{route('rooms.logout',['room'=>$room->id])}}"
+                  method="post">@method('delete') @csrf
+                <button type="submit" class="btn btn-danger">Выйти</button>
+            </form>
+            <div>{{$room->name}}</div>
+            <div class="ml-2"><b class="mr-1">Members:</b> {{$room->members->pluck('name')->implode(', ')}}</div>
         </div>
         @if(count($usersForInvite))
             <form class="mb-4 form-group form-inline" method="post"
