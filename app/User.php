@@ -56,4 +56,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Room::class, 'invites', 'user_id', 'room_id');
     }
+
 }

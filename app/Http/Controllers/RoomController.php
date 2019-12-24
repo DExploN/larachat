@@ -8,6 +8,7 @@ use App\Room;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
@@ -27,6 +28,9 @@ class RoomController extends Controller
 
     public function show(Room $room)
     {
+        if (Gate::denies('show_room', $room->id)) {
+            abort(403);
+        }
         $usersForInvite = [];
         if (Auth::user()->id === $room->creator->id) {
             $usersForInvite = User::whereNotIn('id', $room->members->pluck('id'))->whereNotIn('id',
@@ -37,6 +41,9 @@ class RoomController extends Controller
 
     public function messages(Room $room)
     {
+        if (Gate::denies('show_room', $room->id)) {
+            abort(403);
+        }
         $messages = Message::orderBy('id', 'desc')->where('room_id', $room->id)->with('user')->take(10)->get();
         $messages = $messages->reverse();
         return response()->json(array_values($messages->toArray()));
@@ -44,6 +51,9 @@ class RoomController extends Controller
 
     public function storeMessage(Request $request, int $id)
     {
+        if (Gate::denies('show_room', $id)) {
+            abort(403);
+        }
         $this->validate($request, ['text' => 'required|min:5']);
         event(new SendMessageEvent($request->user(), $request->input('text'), $id));
         return redirect()->back();

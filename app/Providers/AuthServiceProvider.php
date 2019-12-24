@@ -25,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('show_room', function ($user, $roomId) {
+            return $user->rooms->contains('id', $roomId);
+        });
         //
     }
 }
