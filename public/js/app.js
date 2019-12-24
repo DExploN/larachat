@@ -2071,7 +2071,7 @@
                 var _this = this;
 
                 this.updateMessages();
-                Echo.channel('laravel_database_chat_' + this.room).listen('SendMessageEvent', function (e) {
+                Echo["private"]('larachat_chat_' + this.room).listen('SendMessageEvent', function (e) {
                     _this.updateMessages();
                 });
             },

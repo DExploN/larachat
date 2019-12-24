@@ -12,7 +12,6 @@
 */
 
 use Illuminate\Support\Facades\Broadcast;
-
-Broadcast::channel('chat', function () {
-    return true;
+Broadcast::channel('larachat_chat_{room}', function ($user, int $roomId) {
+    return \Illuminate\Support\Facades\Gate::allows('show_room', $roomId);
 });

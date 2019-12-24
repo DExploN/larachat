@@ -32,10 +32,11 @@
         },
         mounted() {
             this.updateMessages();
-            Echo.channel('laravel_database_chat_' + this.room)
+            Echo.private('larachat_chat_' + this.room)
                 .listen('SendMessageEvent', (e) => {
                     this.updateMessages();
                 });
+
         },
         methods: {
             'updateMessages': function () {

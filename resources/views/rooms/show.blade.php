@@ -22,7 +22,6 @@
         <chat-component
             :routes="{{json_encode(['messages'=>route('rooms.messages.index',['room'=>$room->id]),'store'=>route('rooms.messages.store',['room'=>$room->id])])}}"
             room="{{$room->id}}">
-
         </chat-component>
     </div>
 @endsection
