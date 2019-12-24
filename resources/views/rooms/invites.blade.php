@@ -17,13 +17,13 @@
                     <td>{{$room->creator->name}}</td>
                     <td>
                         <form method="post"
-                              action="{{route('invites.delete',['room'=>$room->id])}}">@csrf @method('delete')
+                              action="{{route('rooms.invites.delete',['room'=>$room->id])}}">@csrf @method('delete')
                             <button type="submit" name="status" value="1">Принять</button>
                         </form>
                     </td>
                     <td>
                         <form method="post"
-                              action="{{route('invites.delete',['room'=>$room->id])}}">@csrf @method('delete')
+                              action="{{route('rooms.invites.delete',['room'=>$room->id])}}">@csrf @method('delete')
                             <button type="submit" name="status" value="0">Отказать</button>
                         </form>
                     </td>

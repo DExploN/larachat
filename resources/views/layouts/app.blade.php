@@ -48,7 +48,7 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('invites.index') }}">{{ __('Invites') }}
+                                <a class="nav-link" href="{{ route('rooms.invites.index') }}">{{ __('Invites') }}
                                     ({{$invitesCount}})</a>
                             </li>
                             <li class="nav-item">

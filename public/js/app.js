@@ -2053,13 +2053,18 @@
 //
 //
 //
+//
+//
+//
         /* harmony default export */
         __webpack_exports__["default"] = ({
             props: ['routes', 'room'],
             data: function data() {
                 return {
                     'messages': [],
-                    'new_message': ''
+                    'new_message': '',
+                    'error': '',
+                    'isError': false
                 };
             },
             mounted: function mounted() {
@@ -2081,6 +2086,7 @@
                 'sendMessage': function sendMessage() {
                     var _this3 = this;
 
+                    this.isError = false;
                     axios({
                         'url': this.routes.store,
                         'method': 'post',
@@ -2088,9 +2094,11 @@
                             'text': this.new_message
                         }
                     }).then(function (response) {
+                        _this3.isError = false;
                         _this3.new_message = '';
                     })["catch"](function (errors) {
-                        console.log(errors);
+                        _this3.error = errors.response.data['errors'].text[0];
+                        _this3.isError = true;
                     });
                 }
             }
@@ -32221,6 +32229,7 @@
                                     }
                                 ],
                                 staticClass: "form-control",
+                                class: {"is-invalid": _vm.isError},
                                 attrs: {type: "text", name: "text"},
                                 domProps: {value: _vm.new_message},
                                 on: {
@@ -32232,6 +32241,10 @@
                                     }
                                 }
                             }),
+                            _vm._v(" "),
+                            _c("div", {staticClass: "invalid-feedback"}, [
+                                _vm._v("\n            " + _vm._s(_vm.error) + "\n        ")
+                            ]),
                             _vm._v(" "),
                             _c(
                                 "button",

@@ -6,7 +6,7 @@
     <div class="container">
 
         @foreach($rooms as $room)
-            <a href="{{route('chat.index',['room'=>$room->id])}}" class="btn btn-primary mr-4 mb-2">{{$room->name}}</a>
+            <a href="{{route('rooms.show',['room'=>$room->id])}}" class="btn btn-primary mr-4 mb-2">{{$room->name}}</a>
         @endforeach
 
         <form action="{{route('rooms.store')}}" method="post">

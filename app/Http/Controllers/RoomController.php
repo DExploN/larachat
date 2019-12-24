@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessageEvent;
+use App\Message;
 use App\Room;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
@@ -13,10 +17,35 @@ class RoomController extends Controller
         return view('rooms.index', compact('rooms'));
     }
 
+
     public function store(Request $request)
     {
         $room = $request->user()->ownedRooms()->save(new Room($request->only(['name'])));
         $request->user()->rooms()->attach($room);
+        return redirect()->back();
+    }
+
+    public function show(Room $room)
+    {
+        $usersForInvite = [];
+        if (Auth::user()->id === $room->creator->id) {
+            $usersForInvite = User::whereNotIn('id', $room->members->pluck('id'))->whereNotIn('id',
+                $room->invites->pluck('id'))->get();
+        }
+        return view('rooms.show', compact('room', 'usersForInvite'));
+    }
+
+    public function messages(Room $room)
+    {
+        $messages = Message::orderBy('id', 'desc')->where('room_id', $room->id)->with('user')->take(10)->get();
+        $messages = $messages->reverse();
+        return response()->json(array_values($messages->toArray()));
+    }
+
+    public function storeMessage(Request $request, int $id)
+    {
+        $this->validate($request, ['text' => 'required|min:5']);
+        event(new SendMessageEvent($request->user(), $request->input('text'), $id));
         return redirect()->back();
     }
 

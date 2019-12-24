@@ -8,7 +8,10 @@
             </div>
         </div>
         <form class="mt-3" id="message_form" @submit.prevent="sendMessage">
-            <input type="text" class="form-control" name="text" v-model="new_message"/>
+            <input type="text" class="form-control" :class="{'is-invalid':isError}" name="text" v-model="new_message"/>
+            <div class="invalid-feedback">
+                {{error}}
+            </div>
             <button type="submit" class="btn btn-primary mt-3">Отправить</button>
         </form>
     </div>
@@ -23,6 +26,8 @@
             return {
                 'messages': [],
                 'new_message': '',
+                'error': '',
+                'isError': false
             }
         },
         mounted() {
@@ -39,14 +44,17 @@
                 })
             },
             'sendMessage': function () {
+                this.isError = false;
                 axios({
                     'url': this.routes.store,
                     'method': 'post',
                     'data': {'text': this.new_message}
                 }).then(response => {
+                    this.isError = false;
                     this.new_message = '';
                 }).catch(errors => {
-                    console.log(errors);
+                    this.error = errors.response.data['errors'].text[0];
+                    this.isError = true;
                 })
             }
         }
